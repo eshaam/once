@@ -2,7 +2,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: Dockerfile.rails-style
+      dockerfile: Dockerfile.with-healthcheck
     container_name: once-nginx
     ports:
       - "9080:80"
@@ -20,11 +20,20 @@ services:
   healthcheck:
     build:
       context: .
-      dockerfile: Dockerfile.healthcheck-simple
+      dockerfile: Dockerfile.healthcheck
     container_name: once-healthcheck
     restart: unless-stopped
     environment:
+      - DB_TYPE=none
       - HEALTH_PORT=3001
+    # Uncomment and configure for database health checks:
+    # - DB_HOST=postgres
+    # - DB_USER=postgres
+    # - DB_PASSWORD=password
+    # - DB_NAME=myapp
+    # - DB_TYPE=postgres
+    # - DATABASE_URL=postgresql://postgres:password@postgres:5432/myapp
+    # - MONGODB_URI=mongodb://mongodb:27017/myapp
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/up"]
       interval: 30s

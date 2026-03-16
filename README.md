@@ -55,7 +55,8 @@ docker run -p 9080:80 -p 9443:443 once-nginx
 ## API Endpoints
 
 - `GET /` - Returns the Hello World HTML page
-- `GET /up` - Health check endpoint (returns "OK" with 200 status)
+- `GET /up` - Health check endpoint (returns `{"status":"OK"}` JSON with 200 status)
+- `GET /health` - Detailed health check endpoint (returns JSON with status and timestamp)
 
 ## Docker Images
 
@@ -75,11 +76,16 @@ docker run -p 9080:80 -p 9443:443 ghcr.io/eshaam/once-nginx:latest
 
 ## Health Check
 
-The application includes a health check endpoint that can be used for monitoring:
+The application includes health check endpoints that can be used for monitoring:
 
 ```bash
+# Basic health check (Rails-style JSON response)
 curl -k https://localhost:9443/up
-# Response: OK
+# Response: {"status":"OK"}
+
+# Detailed health check
+curl -k https://localhost:9443/health
+# Response: {"status":"OK","timestamp":"2026-03-16T21:58:18.135Z"}
 ```
 
 ## SSL and HTTPS Setup
