@@ -77,8 +77,44 @@ The application includes a health check endpoint that can be used for monitoring
 
 ```bash
 curl http://localhost:3000/up
-# Response: ok
+# Response: 200 OK
 ```
+
+## SSL and HTTPS Setup
+
+The application includes nginx configuration for SSL/HTTPS support:
+
+### Quick Start with SSL
+
+```bash
+# Start with nginx and SSL (using self-signed certificates)
+docker-compose up -d
+
+# Access via HTTPS (accept self-signed certificate warning)
+curl -k https://localhost:9443/up
+```
+
+### Production SSL Setup
+
+For production deployment with Cloudflare, see [SSL_SETUP.md](SSL_SETUP.md) for:
+- Let's Encrypt certificate setup
+- Cloudflare Origin certificate configuration
+- Security best practices
+- Troubleshooting guide
+
+### Cloudflare Integration
+
+To fix Cloudflare SSL handshake errors (Error 525):
+
+1. **Option 1: Use nginx with SSL (Recommended)**
+   - Set up proper SSL certificates
+   - Configure nginx as reverse proxy
+   - Set Cloudflare SSL mode to "Full (Strict)"
+
+2. **Option 2: Change Cloudflare SSL Mode**
+   - Go to Cloudflare Dashboard → SSL/TLS → Overview
+   - Change to "Flexible" mode
+   - Note: Less secure, only for testing
 
 ## GitHub Repository
 

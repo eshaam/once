@@ -28,5 +28,9 @@ Thumbs.db
 *.temp
 hello-world-app.tar.gz
 
+# SSL certificates (should not be committed)
+*.pem
+ssl/
+
 # Docker
 .dockerignore

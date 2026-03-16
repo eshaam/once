@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000;
 
 // Health check endpoint
 app.get('/up', (req, res) => {
-    res.status(200).send('ok');
+    res.status(200).send('200 OK');
 });
 
 // Serve static files
