@@ -83,7 +83,9 @@ curl http://localhost:3000/up
 ## GitHub Repository
 
 - Repository: https://github.com/eshaam/once
-- Container Registry: https://github.com/eshaam/once/pkgs/container/once
+- Container Registry: `ghcr.io/eshaam/once:latest`
+
+**Note**: Access the container image through Docker CLI for reliable operation. The GitHub Packages interface may show a 404, but the Docker registry is fully functional.
 
 ## License
 
