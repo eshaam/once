@@ -1,74 +1,76 @@
 # Once - Hello World Application
 
-A simple Hello World web application with health check functionality, containerized and ready for deployment.
+A simple Hello World web application with health check functionality, served directly by nginx with SSL support.
 
 ## Features
 
-- Simple Express.js web server
-- Health check endpoint at `/up`
+- Lightweight nginx web server
+- Health check endpoint at `/up` (returns "OK" with 200 status)
 - Serves static HTML content
+- SSL/HTTPS support out of the box
 - Containerized with Docker
 - Available on GitHub Container Registry
 
 ## Quick Start
 
+### Using Docker Compose
+
+```bash
+# Clone the repository
+git clone https://github.com/eshaam/once.git
+cd once
+
+# Start with SSL support
+docker-compose up -d
+
+# Access the application
+# HTTP: http://localhost:9080/ (redirects to HTTPS)
+# HTTPS: https://localhost:9443/
+# Health check: https://localhost:9443/up
+```
+
 ### Using Docker
 
 ```bash
-docker run -p 3000:3000 ghcr.io/eshaam/once:latest
+# Pull the nginx image
+docker pull ghcr.io/eshaam/once-nginx:latest
+
+# Run the container
+docker run -p 9080:80 -p 9443:443 ghcr.io/eshaam/once-nginx:latest
 ```
 
-### From Source
+### From Source (Development)
 
 ```bash
-# Install dependencies
-npm install
+# Generate SSL certificates
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout ssl-key.pem -out ssl-cert.pem \
+  -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
 
-# Start the server
-npm start
+# Build and run
+docker build -f Dockerfile.simple -t once-nginx .
+docker run -p 9080:80 -p 9443:443 once-nginx
 ```
-
-The application will be available at `http://localhost:3000`
 
 ## API Endpoints
 
 - `GET /` - Returns the Hello World HTML page
-- `GET /up` - Health check endpoint (returns "ok" with 200 status)
+- `GET /up` - Health check endpoint (returns "OK" with 200 status)
 
-## Docker Image
+## Docker Images
 
-The containerized version is available at:
-```
-ghcr.io/eshaam/once:latest
-```
+The containerized versions are available at:
+- **Nginx SSL Setup**: `ghcr.io/eshaam/once-nginx:latest` (recommended)
+- **Legacy Node.js**: `ghcr.io/eshaam/once:latest` (deprecated)
 
 ### Pull and Run
 
 ```bash
-# Pull the image
-docker pull ghcr.io/eshaam/once:latest
+# Pull the nginx image (recommended)
+docker pull ghcr.io/eshaam/once-nginx:latest
 
-# Run the container
-docker run -p 3000:3000 ghcr.io/eshaam/once:latest
-```
-
-## Development
-
-### Local Development
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-```
-
-### Building Docker Image Locally
-
-```bash
-docker build -t once:latest .
-docker run -p 3000:3000 once:latest
+# Run the container with SSL
+docker run -p 9080:80 -p 9443:443 ghcr.io/eshaam/once-nginx:latest
 ```
 
 ## Health Check
@@ -76,13 +78,13 @@ docker run -p 3000:3000 once:latest
 The application includes a health check endpoint that can be used for monitoring:
 
 ```bash
-curl http://localhost:3000/up
-# Response: 200 OK
+curl -k https://localhost:9443/up
+# Response: OK
 ```
 
 ## SSL and HTTPS Setup
 
-The application includes nginx configuration for SSL/HTTPS support:
+The application includes nginx with SSL/HTTPS support:
 
 ### Quick Start with SSL
 
@@ -108,7 +110,7 @@ To fix Cloudflare SSL handshake errors (Error 525):
 
 1. **Option 1: Use nginx with SSL (Recommended)**
    - Set up proper SSL certificates
-   - Configure nginx as reverse proxy
+   - Configure nginx SSL mode
    - Set Cloudflare SSL mode to "Full (Strict)"
 
 2. **Option 2: Change Cloudflare SSL Mode**

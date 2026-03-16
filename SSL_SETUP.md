@@ -1,6 +1,6 @@
 # SSL Setup Guide for Production
 
-This guide will help you set up proper SSL certificates for production use with Cloudflare.
+This guide will help you set up proper SSL certificates for production use with Cloudflare for the nginx-only setup.
 
 ## Current Setup (Self-Signed Certificates)
 

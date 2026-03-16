@@ -1,0 +1,21 @@
+FROM nginx:alpine
+
+# Copy nginx configuration
+COPY nginx-simple.conf /etc/nginx/nginx.conf
+
+# Create SSL directory
+RUN mkdir -p /etc/nginx/ssl
+
+# Copy SSL certificates
+COPY ssl-cert.pem /etc/nginx/ssl/cert.pem
+COPY ssl-key.pem /etc/nginx/ssl/key.pem
+
+# Create app directory and copy static files
+RUN mkdir -p /app
+COPY index.html /app/
+
+# Expose ports
+EXPOSE 80 443
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
